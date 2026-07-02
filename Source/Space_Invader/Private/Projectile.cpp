@@ -70,7 +70,7 @@ void AProjectile::OnOverlapBegin(
 	if (MyTeam == OtherTeam)
 		return;
 
-	
-	IDamageable::Execute_TakeHit(OtherActor, Damage);
 	Destroy();
+	IDamageable::Execute_TakeHit(OtherActor, Damage);
+	
 }

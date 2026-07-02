@@ -55,14 +55,6 @@ void APlayerShip::BeginPlay()
 	}
 }
 
-void APlayerShip::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-{
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
-	
-	PlayerInputComponent->BindAxis("MoveAlongOrbit", this, &APlayerShip::MoveAlongOrbit);
-	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &APlayerShip::Fire); 
-}
 
 void APlayerShip::MoveAlongOrbit(float Value)
 {

@@ -25,7 +25,6 @@ public:
 
 	APlayerShip();
 
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	virtual void BeginPlay() override;
 
@@ -43,10 +42,11 @@ protected:
 
 	// Input
 
+	UFUNCTION(BlueprintCallable, Category = "Input")
 	void MoveAlongOrbit(float Value);
 
+	UFUNCTION(BlueprintCallable, Category = "Input")
 	void Fire();
-
 	
 	// Components
 	
