@@ -5,6 +5,10 @@
 #include "EnemyManager.h"
 #include "WeaponComponent.h"
 #include "Components/ArrowComponent.h"
+#include "SpaceInvaderNormal.h"
+#include "Kismet/GameplayStatics.h"
+#include "GameTypes.h"
+
 AEnemyShip::AEnemyShip()
 {
 	PrimaryActorTick.bCanEverTick = true;
@@ -79,9 +83,14 @@ void AEnemyShip::DescendOrbit(float RadiusStep)
 	OrbitRadius -= RadiusStep;
 
 	RotationSpeed *= 1.2f;
-	if (OrbitRadius < 150.0f)
+	if (OrbitRadius <= PLAYER_ORBIT_RADIUS)
 	{
-		OrbitRadius = 150.0f;
+		
+		ASpaceInvaderNormal* GameMode = Cast<ASpaceInvaderNormal>(UGameplayStatics::GetGameMode(this));
+		if (GameMode)
+		{
+			GameMode->GameOver();
+		}
 	}
 
 	if (OrbitalMovement)

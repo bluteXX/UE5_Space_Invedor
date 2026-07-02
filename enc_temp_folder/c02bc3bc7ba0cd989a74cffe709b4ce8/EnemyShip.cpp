@@ -5,6 +5,9 @@
 #include "EnemyManager.h"
 #include "WeaponComponent.h"
 #include "Components/ArrowComponent.h"
+#include "SpaceInvaderNormal.h"
+#include "Kismet/GameplayStatics.h"
+
 AEnemyShip::AEnemyShip()
 {
 	PrimaryActorTick.bCanEverTick = true;
@@ -21,6 +24,7 @@ AEnemyShip::AEnemyShip()
 	Weapon = CreateDefaultSubobject<UWeaponComponent>(TEXT("Weapon")); 
 	Weapon->FireCooldown = 0.3f; 
 	Weapon->bIsEnemyWeapon = true;
+	
 
 	Muzzle = CreateDefaultSubobject<UArrowComponent>(TEXT("Muzzle"));
 	Muzzle->SetupAttachment(RootComponent);
@@ -80,7 +84,12 @@ void AEnemyShip::DescendOrbit(float RadiusStep)
 	RotationSpeed *= 1.2f;
 	if (OrbitRadius < 150.0f)
 	{
-		OrbitRadius = 150.0f;
+		
+		ASpaceInvaderNormal* GameMode = Cast<ASpaceInvaderNormal>(UGameplayStatics::GetGameMode(this));
+		if (GameMode)
+		{
+			GameMode->GameOver();
+		}
 	}
 
 	if (OrbitalMovement)

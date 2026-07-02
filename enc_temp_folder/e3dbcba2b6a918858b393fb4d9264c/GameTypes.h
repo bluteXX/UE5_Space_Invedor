@@ -11,5 +11,3 @@ enum class ETeamID : uint8
 	Enemy UMETA(DisplayName = "Enemy"),
 	Neutral UMETA(DisplayName = "Neutral")
 };
-
-constexpr float PLAYER_ORBIT_RADIUS = 2000.0f;

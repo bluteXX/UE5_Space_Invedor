@@ -1,8 +1,6 @@
 #include "EnemyManager.h"
 #include "EnemyShip.h"
 #include "Engine/World.h"
-#include "SpaceInvaderNormal.h"
-#include "Kismet/GameplayStatics.h"
 
 AEnemyManager::AEnemyManager()
 {
@@ -108,14 +106,6 @@ void AEnemyManager::RemoveEnemy(AEnemyShip* Enemy)
 	{
 		
 		EnemyColumns[Col].Remove(Enemy);
-	}
-	if (ActiveEnemies.Num() == 0)
-	{
-		ASpaceInvaderNormal* GM = Cast<ASpaceInvaderNormal>(UGameplayStatics::GetGameMode(this));
-		if (GM)
-		{
-			GM->GameWon();
-		}
 	}
 }
 

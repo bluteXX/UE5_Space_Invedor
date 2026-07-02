@@ -5,6 +5,8 @@
 #include "HealthComponent.h"
 #include "WeaponComponent.h" 
 #include "Components/ArrowComponent.h"
+#include "SpaceInvaderNormal.h"
+#include "Kismet/GameplayStatics.h"
 APlayerShip::APlayerShip()
 {
 	PrimaryActorTick.bCanEverTick = false; 
@@ -44,6 +46,7 @@ void APlayerShip::BeginPlay()
 	
 	if (OrbitalMovement)
 	{
+		OrbitalMovement->OrbitRadius = PLAYER_ORBIT_RADIUS;
 		OrbitalMovement->UpdateOwnerPosition();
 	}
 	if (HealthComponent)
@@ -95,22 +98,12 @@ void APlayerShip::TakeHit_Implementation(float Damage)
 
 void APlayerShip::HandlePlayerDeath()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Gracz zginal - Game Over"));
+	UE_LOG(LogTemp, Warning, TEXT("Game Over"));
 
-	
-	if (APlayerController* PC = Cast<APlayerController>(GetController()))
+		
+		ASpaceInvaderNormal* GameMode = Cast<ASpaceInvaderNormal>(UGameplayStatics::GetGameMode(this));
+	if (GameMode)
 	{
-		DisableInput(PC);
+		GameMode->GameOver();
 	}
-
-	
-	SetActorEnableCollision(false);
-	if (ShipSprite)
-	{
-		ShipSprite->SetVisibility(false);
-	}
-
-	
-	
 }
-
