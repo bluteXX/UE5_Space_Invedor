@@ -2,6 +2,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "GameFramework/PlayerController.h"
 #include "GameFramework/Pawn.h"
+#include "SpaceInvaderGameState.h"
 
 void ASpaceInvaderNormal::GameOver()
 {
@@ -27,6 +28,10 @@ void ASpaceInvaderNormal::GameOver()
 			PlayerPawn->SetActorHiddenInGame(true);
 			PlayerPawn->SetActorEnableCollision(false);
 		}
+	}
+	if (ASpaceInvaderGameState* GS = GetGameState<ASpaceInvaderGameState>())
+	{
+		GS->StopTimer();
 	}
 
 	
@@ -56,7 +61,10 @@ void ASpaceInvaderNormal::GameWon()
 			PlayerPawn->DisableInput(PC);
 		}
 	}
-
+	if (ASpaceInvaderGameState* GS = GetGameState<ASpaceInvaderGameState>())
+	{
+		GS->StopTimer();
+	}
 	
 	OnGameWonUI();
 }

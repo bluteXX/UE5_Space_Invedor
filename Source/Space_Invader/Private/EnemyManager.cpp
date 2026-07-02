@@ -3,6 +3,7 @@
 #include "Engine/World.h"
 #include "SpaceInvaderNormal.h"
 #include "Kismet/GameplayStatics.h"
+#include "SpaceInvaderGameState.h"
 
 AEnemyManager::AEnemyManager()
 {
@@ -109,6 +110,13 @@ void AEnemyManager::RemoveEnemy(AEnemyShip* Enemy)
 		
 		EnemyColumns[Col].Remove(Enemy);
 	}
+
+	ASpaceInvaderGameState* GS = GetWorld()->GetGameState<ASpaceInvaderGameState>();
+	if (GS)
+	{
+		GS->AddKill();
+	}
+
 	if (ActiveEnemies.Num() == 0)
 	{
 		ASpaceInvaderNormal* GM = Cast<ASpaceInvaderNormal>(UGameplayStatics::GetGameMode(this));
