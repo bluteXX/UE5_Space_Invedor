@@ -11,7 +11,7 @@ class UPaperSpriteComponent;
 class UOrbitalMovementComponent;
 class UWeaponComponent;
 class UArrowComponent;
-class UHealthComponent;
+
 UCLASS()
 class SPACE_INVADER_API APlayerShip : public APawn, public IDamageable
 {
@@ -27,30 +27,30 @@ public:
 
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	virtual void BeginPlay() override;
-
-	UFUNCTION()
-	void HandlePlayerDeath();
-
-	// Gameplay Functions
-
-	ETeamID GetTeamID_Implementation() const;
-
-	void TakeHit_Implementation(float Damage);
 
 protected:
 
+	
+	// Actor Lifecycle
+	
 
+	virtual void BeginPlay() override;
+
+
+	
 	// Input
+	
 
+	
 	void MoveAlongOrbit(float Value);
 
 	void Fire();
 
+
 	
 	// Components
 	
-	
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	UBoxComponent* CollisionBox;
 
@@ -66,15 +66,11 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	UWeaponComponent* Weapon;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	UHealthComponent* HealthComponent;
+
 	
 	// Configuration
 	
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
 	float AngularSpeed = 180.0f;
-
-	
-
 };

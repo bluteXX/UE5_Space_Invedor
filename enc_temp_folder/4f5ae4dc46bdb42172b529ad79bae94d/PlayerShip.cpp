@@ -2,7 +2,6 @@
 #include "Components/BoxComponent.h"
 #include "PaperSpriteComponent.h"
 #include "OrbitalMovementComponent.h"
-#include "HealthComponent.h"
 #include "WeaponComponent.h" 
 #include "Components/ArrowComponent.h"
 APlayerShip::APlayerShip()
@@ -31,10 +30,6 @@ APlayerShip::APlayerShip()
 	Muzzle->SetRelativeRotation(FRotator::ZeroRotator);      
 	Muzzle->ArrowSize = 1.0f; 
 	
-
-	HealthComponent = CreateDefaultSubobject<UHealthComponent>(TEXT("HealthComponent"));
-	
-	
 }
 
 void APlayerShip::BeginPlay()
@@ -45,10 +40,6 @@ void APlayerShip::BeginPlay()
 	if (OrbitalMovement)
 	{
 		OrbitalMovement->UpdateOwnerPosition();
-	}
-	if (HealthComponent)
-	{
-		HealthComponent->OnDeath.AddDynamic(this, &APlayerShip::HandlePlayerDeath);
 	}
 }
 
@@ -79,38 +70,3 @@ void APlayerShip::Fire()
 		Weapon->TryFire();
 	}
 }
-
-ETeamID APlayerShip::GetTeamID_Implementation() const
-{
-	return ETeamID::Player;
-}
-
-void APlayerShip::TakeHit_Implementation(float Damage)
-{
-	if (HealthComponent)
-	{
-		HealthComponent->ApplyDamage(Damage);
-	}
-}
-
-void APlayerShip::HandlePlayerDeath()
-{
-	UE_LOG(LogTemp, Warning, TEXT("Gracz zginal - Game Over"));
-
-	
-	if (APlayerController* PC = Cast<APlayerController>(GetController()))
-	{
-		DisableInput(PC);
-	}
-
-	
-	SetActorEnableCollision(false);
-	if (ShipSprite)
-	{
-		ShipSprite->SetVisibility(false);
-	}
-
-	
-	
-}
-

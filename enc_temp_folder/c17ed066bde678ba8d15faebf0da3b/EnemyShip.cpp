@@ -21,7 +21,6 @@ AEnemyShip::AEnemyShip()
 	Weapon = CreateDefaultSubobject<UWeaponComponent>(TEXT("Weapon")); 
 	Weapon->FireCooldown = 0.3f; 
 	Weapon->bIsEnemyWeapon = true;
-	
 
 	Muzzle = CreateDefaultSubobject<UArrowComponent>(TEXT("Muzzle"));
 	Muzzle->SetupAttachment(RootComponent);
