@@ -12,12 +12,20 @@ class SPACE_INVADER_API ASpaceInvaderNormal : public AGameModeBase
 public:
 	
 	ASpaceInvaderNormal();
-
+	void BeginPlay();
 	
 	void GameOver();
 
 	
 	void GameWon();
+
+	
+	UFUNCTION()
+	void OnPlayerDied();
+
+	
+	UFUNCTION()
+	void OnPlanetDied();
 
 	
 	UPROPERTY(BlueprintReadOnly, Category = "Game State")

@@ -90,12 +90,6 @@ void APlayerShip::TakeHit_Implementation(float Damage)
 
 void APlayerShip::HandlePlayerDeath()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Game Over"));
-
-		
-		ASpaceInvaderNormal* GameMode = Cast<ASpaceInvaderNormal>(UGameplayStatics::GetGameMode(this));
-	if (GameMode)
-	{
-		GameMode->GameOver();
-	}
+	UE_LOG(LogTemp, Warning, TEXT("Wizualny wybuch statku!"));
+	Destroy();
 }

@@ -3,6 +3,9 @@
 #include "GameFramework/PlayerController.h"
 #include "GameFramework/Pawn.h"
 #include "SpaceInvaderGameState.h"
+#include "Planet.h"     
+#include "HealthComponent.h"
+#include "PlayerShip.h"
 
 void ASpaceInvaderNormal::GameOver()
 {
@@ -71,4 +74,46 @@ void ASpaceInvaderNormal::GameWon()
 
 ASpaceInvaderNormal::ASpaceInvaderNormal()
 {
+}
+
+void ASpaceInvaderNormal::BeginPlay()
+{
+	Super::BeginPlay();
+
+	
+	APawn* PlayerPawn = UGameplayStatics::GetPlayerPawn(this, 0);
+	if (PlayerPawn)
+	{
+		UHealthComponent* PlayerHealth = PlayerPawn->FindComponentByClass<UHealthComponent>();
+		if (PlayerHealth)
+		{
+			
+			PlayerHealth->OnDeath.AddDynamic(this, &ASpaceInvaderNormal::OnPlayerDied);
+		}
+	}
+
+
+	AActor* PlanetActor = UGameplayStatics::GetActorOfClass(this, APlanet::StaticClass());
+	if (PlanetActor)
+	{
+		UHealthComponent* PlanetHealth = PlanetActor->FindComponentByClass<UHealthComponent>();
+		if (PlanetHealth)
+		{
+			
+			PlanetHealth->OnDeath.AddDynamic(this, &ASpaceInvaderNormal::OnPlanetDied);
+		}
+	}
+}
+
+void ASpaceInvaderNormal::OnPlayerDied()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Gracz"));
+	GameOver(); 
+}
+
+// Reakcja na śmierć Planety
+void ASpaceInvaderNormal::OnPlanetDied()
+{
+	UE_LOG(LogTemp, Error, TEXT("Planeta"));
+	GameOver(); 
 }

@@ -88,16 +88,29 @@ void AAsteroid::SplitAsteroid()
 
 	for (int32 i = 0; i < 2; i++)
 	{
-		AAsteroid* SmallerAsteroid = GetWorld()->SpawnActor<AAsteroid>(AsteroidClass, GetActorLocation(), FRotator::ZeroRotator);
+		
+		FVector SpawnLocation = GetActorLocation();
+		SpawnLocation.X += (i == 0) ? 30.0f : -30.0f;
+		SpawnLocation.Z += (i == 0) ? 30.0f : -30.0f;
+
+		FTransform SpawnTransform(FRotator::ZeroRotator, SpawnLocation);
+
+	
+		AAsteroid* SmallerAsteroid = GetWorld()->SpawnActorDeferred<AAsteroid>(AsteroidClass, SpawnTransform);
+
 		if (SmallerAsteroid)
 		{
 			float RandomAngle = FMath::FRandRange(0.0f, 360.0f);
 			FVector2D RandomDir(FMath::Cos(FMath::DegreesToRadians(RandomAngle)), FMath::Sin(FMath::DegreesToRadians(RandomAngle)));
+
+			
 			SmallerAsteroid->InitAsteroid(RandomDir, MoveSpeed * 1.2f, NextSize);
+
+			
+			SmallerAsteroid->FinishSpawning(SpawnTransform);
 		}
 	}
 }
-
 
 
 
@@ -115,7 +128,7 @@ void AAsteroid::OnAsteroidOverlap(AActor* OverlappedActor, AActor* OtherActor)
 		if (OtherTeam == ETeamID::Player) 
 		{
 			
-			IDamageable::Execute_TakeHit(OtherActor, 100.0f);
+			IDamageable::Execute_TakeHit(OtherActor,ADamage);
 
 			
 			TakeHit_Implementation(0.0f);

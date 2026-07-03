@@ -6,19 +6,14 @@
 #include "EnemyManager.generated.h"
 
 class AEnemyShip;
+class ASpiralEnemy;
 
 UCLASS()
 class SPACE_INVADER_API AEnemyManager : public AActor
 {
 	GENERATED_BODY()
 
-public:
 
-	
-	// Constructor & Lifecycle
-	
-
-	AEnemyManager();
 
 protected:
 
@@ -27,37 +22,46 @@ protected:
 
 public:
 
-	
-	// Enemy Management
-	
 
-	
+	// Enemy Management
+
+	AEnemyManager();
+
 	void SpawnWave();
+	void SpawnSpiralEnemy();
 
 	// Removes a destroyed enemy from the manager.
 	void RemoveEnemy(AEnemyShip* Enemy);
+	void RemoveSpiralEnemy(ASpiralEnemy* Enemy);
 
-	
-	AEnemyShip* GetLowestEnemyInColumn(int32 Column);
+	AEnemyShip* GetRandomEnemyInOrbit(int32 OrbitIndex);
 
-	// Chooses a random column and attempts to fire.
-	void EnemyShootRandomColumn();
+	// Fires from a random enemy on the lowest active orbit.
+	void EnemyShootFromLowestOrbit();
 
 
 protected:
 
-	
+
 	// Spawn Settings
-	
+
+	UPROPERTY(EditAnywhere, Category = "Spawn")
+	TSubclassOf<ASpiralEnemy> SpiralEnemyClass;
+
+	UPROPERTY(EditAnywhere, Category = "Spawn")
+	float SpiralEnemyTimeToCenter = 180.0f;
+
+	UPROPERTY(EditAnywhere, Category = "Spawn")
+	int32 NumberOfSpiralEnemies = 1;
 
 	UPROPERTY(EditAnywhere, Category = "Spawn")
 	TSubclassOf<AEnemyShip> EnemyClassToSpawn;
 
 	UPROPERTY(EditAnywhere, Category = "Spawn")
-	int32 EnemiesPerColumn = 5;
+	int32 NumberOfOrbits = 11;
 
 	UPROPERTY(EditAnywhere, Category = "Spawn")
-	int32 NumberOfColumns = 11;
+	int32 EnemiesPerOrbit = 5;
 
 	UPROPERTY(EditAnywhere, Category = "Spawn")
 	float StartingRadius = 5000.f;
@@ -66,9 +70,9 @@ protected:
 	float RadiusStep = 100.f;
 
 
-	
+
 	// Shooting Settings
-	
+
 
 	UPROPERTY(EditAnywhere, Category = "Shooting")
 	float MinFireInterval = 0.4f;
@@ -85,24 +89,25 @@ protected:
 
 private:
 
-	
+
 	// Internal Functions
-	
 
-	// Schedules the next enemy shot.
+
 	void ScheduleNextShot();
+	void CheckForWin();
+	int32 GetLowestActiveOrbitIndex() const;
 
 
-	
 	// Runtime Data
-	
 
-	// Enemies grouped by columns.
-	TArray<TArray<AEnemyShip*>> EnemyColumns;
+
+	// Enemies grouped by orbit ring.
+	TArray<TArray<AEnemyShip*>> EnemyOrbits;
 
 	// Flat list of all active enemies.
 	TArray<AEnemyShip*> ActiveEnemies;
 
-	
+	TArray<ASpiralEnemy*> ActiveSpiralEnemies;
+
 	FTimerHandle ShootTimerHandle;
 };

@@ -48,7 +48,12 @@ protected:
 	UFUNCTION()
 	virtual void OnAsteroidOverlap(AActor* OverlappedActor, AActor* OtherActor);
 
-	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Asteroid")
+	float MoveSpeed = 150.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Asteroid")
+	float ADamage = 1.f;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Asteroid")
 	TSubclassOf<AAsteroid> AsteroidClass;
 
@@ -57,6 +62,6 @@ protected:
 
 private:
 
-	float MoveSpeed = 150.0f;
+	
 	FVector2D MoveDirection = FVector2D(1.0f, 0.0f);
 };
