@@ -18,6 +18,11 @@ void AAsteroidManager::ScheduleNextSpawn()
 	float Delay = FMath::FRandRange(MinSpawnInterval, MaxSpawnInterval);
 	GetWorldTimerManager().SetTimer(SpawnTimerHandle, this, &AAsteroidManager::SpawnAsteroid, Delay, false);
 }
+void AAsteroidManager::IncreaseDifficulty()
+{
+	MinSpawnInterval = FMath::Max(MinSpawnInterval - SpawnIntervalReductionPerWave, MinSpawnIntervalFloor);
+	MaxSpawnInterval = FMath::Max(MaxSpawnInterval - SpawnIntervalReductionPerWave, MinSpawnIntervalFloor + 0.5f);
+}
 
 void AAsteroidManager::SpawnAsteroid()
 {

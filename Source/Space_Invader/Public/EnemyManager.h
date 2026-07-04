@@ -8,7 +8,13 @@
 class AEnemyShip;
 class ASpiralEnemy;
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnAllEnemiesDefeated);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnEnemyBreachedOrbit);
+
+
 UCLASS()
+
+
 class SPACE_INVADER_API AEnemyManager : public AActor
 {
 	GENERATED_BODY()
@@ -22,28 +28,48 @@ protected:
 
 public:
 
-
-	// Enemy Management
+	UPROPERTY(BlueprintAssignable, Category = "Events")
+	FOnAllEnemiesDefeated OnAllEnemiesDefeated;
+	UPROPERTY(BlueprintAssignable)
+	FOnEnemyBreachedOrbit OnEnemyBreachedOrbit;
+	
 
 	AEnemyManager();
 
 	void SpawnWave();
 	void SpawnSpiralEnemy();
 
-	// Removes a destroyed enemy from the manager.
+	
 	void RemoveEnemy(AEnemyShip* Enemy);
 	void RemoveSpiralEnemy(ASpiralEnemy* Enemy);
 
 	AEnemyShip* GetRandomEnemyInOrbit(int32 OrbitIndex);
 
-	// Fires from a random enemy on the lowest active orbit.
+	
 	void EnemyShootFromLowestOrbit();
 
+	UFUNCTION(BlueprintCallable, Category = "Difficulty")
+	void IncreaseDifficulty();
+
+	UPROPERTY(EditAnywhere, Category = "Difficulty")
+	float SpeedMultiplierPerWave = 1.15f;
+
+	UPROPERTY(EditAnywhere, Category = "Difficulty")
+	int32 ExtraEnemiesPerWave = 1;
+
+
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Difficulty")
+	float FireIntervalReductionPerWave = 0.05f;
+
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Difficulty")
+	float MinFireIntervalFloor = 0.2f;
 
 protected:
 
 
-	// Spawn Settings
+	float CurrentSpeedMultiplier = 1.0f;
 
 	UPROPERTY(EditAnywhere, Category = "Spawn")
 	TSubclassOf<ASpiralEnemy> SpiralEnemyClass;

@@ -15,7 +15,8 @@ class SPACE_INVADER_API AAsteroidManager : public AActor
 public:
 
 	AAsteroidManager();
-
+	UFUNCTION(BlueprintCallable, Category = "Difficulty")
+	void IncreaseDifficulty();
 protected:
 
 	virtual void BeginPlay() override;
@@ -24,6 +25,12 @@ protected:
 	void ScheduleNextSpawn();
 
 	
+
+	UPROPERTY(EditAnywhere, Category = "Difficulty")
+	float SpawnIntervalReductionPerWave = 0.3f;
+
+	UPROPERTY(EditAnywhere, Category = "Difficulty")
+	float MinSpawnIntervalFloor = 0.5f;
 
 	UPROPERTY(EditAnywhere, Category = "Spawn")
 	TSubclassOf<AAsteroid> AsteroidClass;

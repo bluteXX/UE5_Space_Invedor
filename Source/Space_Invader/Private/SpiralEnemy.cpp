@@ -74,7 +74,7 @@ void ASpiralEnemy::Tick(float DeltaTime)
 	}
 
 	
-	if (CurrentRadius <= PLAYER_ORBIT_RADIUS)
+	if (CurrentRadius <= DEFEAT_ORBIT_RADIUS)
 	{
 		OnBreachedPlayerOrbit();
 	}
@@ -94,11 +94,12 @@ void ASpiralEnemy::OnBreachedPlayerOrbit()
 
 	bHasBreachedOrbit = true;
 
-	ASpaceInvaderNormal* GM = Cast<ASpaceInvaderNormal>(UGameplayStatics::GetGameMode(this));
-	if (GM)
+	if (MyManager)
 	{
-		GM->GameOver();
+		MyManager->OnEnemyBreachedOrbit.Broadcast();
 	}
+
+	Destroy();
 }
 
 void ASpiralEnemy::Destroyed()

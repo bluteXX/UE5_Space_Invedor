@@ -33,6 +33,16 @@ void AEnemyManager::ScheduleNextShot()
 	);
 }
 
+void AEnemyManager::IncreaseDifficulty()
+{
+	CurrentSpeedMultiplier *= SpeedMultiplierPerWave;
+	EnemiesPerOrbit += ExtraEnemiesPerWave;
+
+	
+	MinFireInterval = FMath::Max(MinFireInterval - FireIntervalReductionPerWave, MinFireIntervalFloor);
+	MaxFireInterval = FMath::Max(MaxFireInterval - FireIntervalReductionPerWave, MinFireIntervalFloor + 0.3f);
+}
+
 void AEnemyManager::EnemyShootFromLowestOrbit()
 {
 	if (ActiveEnemies.Num() > 0 && FMath::FRand() <= ChanceToFire)
@@ -100,6 +110,7 @@ void AEnemyManager::SpawnWave()
 				NewEnemy->SetupOrbit(CurrentRadius, CurrentAngle);
 				NewEnemy->SetManager(this);
 				NewEnemy->SetDescendStep(RadiusStep);
+				NewEnemy->ApplySpeedMultiplier(CurrentSpeedMultiplier);
 				EnemyOrbits[Orbit].Add(NewEnemy);
 				ActiveEnemies.Add(NewEnemy);
 			}
@@ -210,10 +221,6 @@ void AEnemyManager::CheckForWin()
 {
 	if (ActiveEnemies.Num() == 0 && ActiveSpiralEnemies.Num() == 0)
 	{
-		ASpaceInvaderNormal* GM = Cast<ASpaceInvaderNormal>(UGameplayStatics::GetGameMode(this));
-		if (GM)
-		{
-			GM->GameWon();
-		}
+		OnAllEnemiesDefeated.Broadcast();
 	}
 }

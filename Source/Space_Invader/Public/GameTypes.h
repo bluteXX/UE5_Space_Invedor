@@ -21,6 +21,7 @@ enum class EAsteroidSize : uint8
 };
 
 constexpr float PLAYER_ORBIT_RADIUS = 2000.0f;
+constexpr float DEFEAT_ORBIT_RADIUS = 3000.0f;
 
 constexpr float PLAY_FIELD_MIN_X = -20000.0f;
 constexpr float PLAY_FIELD_MAX_X = 20000.0f;

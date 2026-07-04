@@ -6,6 +6,7 @@
 #include "Planet.h"     
 #include "HealthComponent.h"
 #include "PlayerShip.h"
+#include "EnemyManager.h"
 
 void ASpaceInvaderNormal::GameOver()
 {
@@ -15,7 +16,7 @@ void ASpaceInvaderNormal::GameOver()
 		return;
 	}
 
-	
+
 	bIsGameOver = true;
 
 	UE_LOG(LogTemp, Warning, TEXT("Game Over"));
@@ -24,7 +25,7 @@ void ASpaceInvaderNormal::GameOver()
 	{
 		PC->DisableInput(PC);
 
-		
+
 		APawn* PlayerPawn = PC->GetPawn();
 		if (PlayerPawn)
 		{
@@ -37,7 +38,7 @@ void ASpaceInvaderNormal::GameOver()
 		GS->StopTimer();
 	}
 
-	
+
 	OnGameOverUI();
 }
 
@@ -54,10 +55,10 @@ void ASpaceInvaderNormal::GameWon()
 	APlayerController* PC = UGameplayStatics::GetPlayerController(this, 0);
 	if (PC)
 	{
-		
+
 		PC->DisableInput(PC);
 
-		
+
 		APawn* PlayerPawn = PC->GetPawn();
 		if (PlayerPawn)
 		{
@@ -68,30 +69,21 @@ void ASpaceInvaderNormal::GameWon()
 	{
 		GS->StopTimer();
 	}
-	
+
 	OnGameWonUI();
 }
 
 ASpaceInvaderNormal::ASpaceInvaderNormal()
-{
-}
+{}
+
+
 
 void ASpaceInvaderNormal::BeginPlay()
 {
 	Super::BeginPlay();
 
-	
 	APawn* PlayerPawn = UGameplayStatics::GetPlayerPawn(this, 0);
-	if (PlayerPawn)
-	{
-		UHealthComponent* PlayerHealth = PlayerPawn->FindComponentByClass<UHealthComponent>();
-		if (PlayerHealth)
-		{
-			
-			PlayerHealth->OnDeath.AddDynamic(this, &ASpaceInvaderNormal::OnPlayerDied);
-		}
-	}
-
+	BindPlayerHealthDelegate(PlayerPawn);
 
 	AActor* PlanetActor = UGameplayStatics::GetActorOfClass(this, APlanet::StaticClass());
 	if (PlanetActor)
@@ -99,21 +91,51 @@ void ASpaceInvaderNormal::BeginPlay()
 		UHealthComponent* PlanetHealth = PlanetActor->FindComponentByClass<UHealthComponent>();
 		if (PlanetHealth)
 		{
-			
 			PlanetHealth->OnDeath.AddDynamic(this, &ASpaceInvaderNormal::OnPlanetDied);
 		}
+	}
+
+	AActor* ManagerActor = UGameplayStatics::GetActorOfClass(this, AEnemyManager::StaticClass());
+	EnemyManagerRef = Cast<AEnemyManager>(ManagerActor);
+	if (EnemyManagerRef)
+	{
+		EnemyManagerRef->OnAllEnemiesDefeated.AddDynamic(this, &ASpaceInvaderNormal::HandleAllEnemiesDefeated);
+		EnemyManagerRef->OnEnemyBreachedOrbit.AddDynamic(this, &ASpaceInvaderNormal::HandleEnemyBreachedOrbit);
+	}
+}
+
+void ASpaceInvaderNormal::HandleAllEnemiesDefeated()
+{
+	GameWon();
+}
+
+void ASpaceInvaderNormal::BindPlayerHealthDelegate(APawn* PlayerPawn)
+{
+	if (!PlayerPawn)
+	{
+		return;
+	}
+
+	if (UHealthComponent* PlayerHealth = PlayerPawn->FindComponentByClass<UHealthComponent>())
+	{
+		PlayerHealth->OnDeath.AddDynamic(this, &ASpaceInvaderNormal::OnPlayerDied);
 	}
 }
 
 void ASpaceInvaderNormal::OnPlayerDied()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Gracz"));
-	GameOver(); 
+	GameOver();
 }
 
-// Reakcja na śmierć Planety
+
 void ASpaceInvaderNormal::OnPlanetDied()
 {
 	UE_LOG(LogTemp, Error, TEXT("Planeta"));
-	GameOver(); 
+	GameOver();
+}
+
+void ASpaceInvaderNormal::HandleEnemyBreachedOrbit()
+{
+	GameOver();
 }

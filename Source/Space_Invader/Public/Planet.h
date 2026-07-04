@@ -2,6 +2,7 @@
 
 #include "Damageable.h"
 #include "CoreMinimal.h"
+#include "Components/WidgetComponent.h"
 #include "GameFramework/Actor.h"
 #include "GameTypes.h"
 #include "Planet.generated.h"
@@ -30,6 +31,8 @@ public:
 protected:
 
 	virtual void BeginPlay() override;
+
+
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	UBoxComponent* CollisionBox;

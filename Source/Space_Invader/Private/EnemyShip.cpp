@@ -79,17 +79,14 @@ void AEnemyShip::SetupOrbit(float NewRadius, float NewAngle)
 
 void AEnemyShip::DescendOrbit(float RadiusStep)
 {
-	
 	OrbitRadius -= RadiusStep;
 
 	RotationSpeed *= 1.2f;
-	if (OrbitRadius <= PLAYER_ORBIT_RADIUS)
+	if (OrbitRadius <= DEFEAT_ORBIT_RADIUS)
 	{
-		
-		ASpaceInvaderNormal* GameMode = Cast<ASpaceInvaderNormal>(UGameplayStatics::GetGameMode(this));
-		if (GameMode)
+		if (MyManager)
 		{
-			GameMode->GameOver();
+			MyManager->OnEnemyBreachedOrbit.Broadcast();
 		}
 	}
 
@@ -98,6 +95,11 @@ void AEnemyShip::DescendOrbit(float RadiusStep)
 		OrbitalMovement->OrbitRadius = OrbitRadius;
 		OrbitalMovement->UpdateOwnerPosition();
 	}
+}
+
+void AEnemyShip::ApplySpeedMultiplier(float Multiplier)
+{
+	RotationSpeed *= Multiplier;
 }
 
 void AEnemyShip::Destroyed()

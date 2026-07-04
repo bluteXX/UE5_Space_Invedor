@@ -27,7 +27,8 @@ public:
 
 	virtual void Destroyed() override;
 
-
+	UFUNCTION()
+	void ApplySpeedMultiplier(float Multiplier);
 	
 	// Gameplay Functions
 	
