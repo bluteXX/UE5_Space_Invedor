@@ -22,6 +22,7 @@ Fala za falą, bez końca. Po każdej pokonanej fali poziom trudności rośnie. 
 - **Unreal Engine 5.7.4**
 ---
 ▶️ Jak odpalić
+
 1-Zklonuj repozytrium
 
 2-Odpal .uproject
@@ -34,8 +35,11 @@ Fala za falą, bez końca. Po każdej pokonanej fali poziom trudności rośnie. 
 🕹️ Sterowanie
 
 Klawisz    Akcja
+
 A/D        Poruszanie się po orbicie (lewo / prawo)
+
 Spacja     Strzał
+
 Enter      Pauza
 
 Miłej gry! 👽🛸
