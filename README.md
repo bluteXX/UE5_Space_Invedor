@@ -22,9 +22,12 @@ Fala za falą, bez końca. Po każdej pokonanej fali poziom trudności rośnie. 
 - **Unreal Engine 5.7.4**
 ---
 ▶️ Jak odpalić
-1- Zklonuj repozytrium
+1-Zklonuj repozytrium
+
 2-Odpal .uproject
+
 3-Build
+
 4-Bazowy poziom to main menu
 
 
