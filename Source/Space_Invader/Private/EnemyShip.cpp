@@ -9,6 +9,8 @@
 #include "Kismet/GameplayStatics.h"
 #include "GameTypes.h"
 
+// ==================== Lifecycle ====================
+
 AEnemyShip::AEnemyShip()
 {
 	PrimaryActorTick.bCanEverTick = true;
@@ -22,29 +24,15 @@ AEnemyShip::AEnemyShip()
 
 	OrbitalMovement = CreateDefaultSubobject<UOrbitalMovementComponent>(TEXT("OrbitalMovement"));
 
-	Weapon = CreateDefaultSubobject<UWeaponComponent>(TEXT("Weapon")); 
-	Weapon->FireCooldown = 0.3f; 
+	Weapon = CreateDefaultSubobject<UWeaponComponent>(TEXT("Weapon"));
+	Weapon->FireCooldown = 0.3f;
 	Weapon->bIsEnemyWeapon = true;
-	
 
 	Muzzle = CreateDefaultSubobject<UArrowComponent>(TEXT("Muzzle"));
 	Muzzle->SetupAttachment(RootComponent);
-	Muzzle->SetRelativeLocation(FVector(60.0f, 0.0f, 0.0f)); 
-	Muzzle->SetRelativeRotation(FRotator::ZeroRotator);      
-	Muzzle->ArrowSize = 1.0f; 
-
-	
-}
-
-void AEnemyShip::TakeHit_Implementation(float Damage)
-{
-	
-	Destroy();
-}
-
-ETeamID AEnemyShip::GetTeamID_Implementation() const
-{
-	return ETeamID::Enemy;
+	Muzzle->SetRelativeLocation(FVector(60.0f, 0.0f, 0.0f));
+	Muzzle->SetRelativeRotation(FRotator::ZeroRotator);
+	Muzzle->ArrowSize = 1.0f;
 }
 
 void AEnemyShip::OnConstruction(const FTransform& Transform)
@@ -63,6 +51,49 @@ void AEnemyShip::BeginPlay()
 	Super::BeginPlay();
 	Weapon->SetMuzzle(Muzzle);
 }
+
+void AEnemyShip::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+	float DeltaAngle = RotationSpeed * RotationDirection * DeltaTime;
+	if (OrbitalMovement) { OrbitalMovement->MoveOrbit(DeltaAngle); }
+
+	TotalAngleTraveled += FMath::Abs(DeltaAngle);
+
+	float CurrentLaps = TotalAngleTraveled / 360.0f;
+
+	if (CurrentLaps >= CompletedLaps + 1.0f)
+	{
+		DescendOrbit(DescendStep);
+		RotationDirection *= -1.0f;
+		CompletedLaps++;
+	}
+}
+
+void AEnemyShip::Destroyed()
+{
+	Super::Destroyed();
+
+	if (MyManager)
+	{
+		MyManager->RemoveEnemy(this);
+	}
+}
+
+// ==================== Gameplay Functions (IDamageable) ====================
+
+void AEnemyShip::TakeHit_Implementation(float Damage)
+{
+	Destroy();
+}
+
+ETeamID AEnemyShip::GetTeamID_Implementation() const
+{
+	return ETeamID::Enemy;
+}
+
+// ==================== Gameplay Functions ====================
 
 void AEnemyShip::SetupOrbit(float NewRadius, float NewAngle)
 {
@@ -89,8 +120,8 @@ void AEnemyShip::DescendOrbit(float RadiusStep)
 			MyManager->OnEnemyBreachedOrbit.Broadcast();
 		}
 
-		Destroy();   
-		return;      
+		Destroy();
+		return;
 	}
 
 	if (OrbitalMovement)
@@ -100,46 +131,6 @@ void AEnemyShip::DescendOrbit(float RadiusStep)
 	}
 }
 
-void AEnemyShip::ApplySpeedMultiplier(float Multiplier)
-{
-	RotationSpeed *= Multiplier;
-}
-
-void AEnemyShip::Destroyed()
-{
-	Super::Destroyed();
-
-	
-	if (MyManager)
-	{
-		MyManager->RemoveEnemy(this);
-	}
-}
-
-
-void AEnemyShip::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
-	
-	float DeltaAngle = RotationSpeed * RotationDirection * DeltaTime;
-	if (OrbitalMovement) { OrbitalMovement->MoveOrbit(DeltaAngle); }
-
-	
-	TotalAngleTraveled += FMath::Abs(DeltaAngle);
-
-	float CurrentLaps = TotalAngleTraveled / 360.0f;
-
-	if (CurrentLaps >= CompletedLaps + 1.0f)
-	{
-		
-		DescendOrbit(DescendStep);
-		RotationDirection *= -1.0f;
-
-	
-		CompletedLaps++;
-	}
-}
 bool AEnemyShip::TryShoot()
 {
 	if (Weapon)
@@ -147,4 +138,9 @@ bool AEnemyShip::TryShoot()
 		return Weapon->TryFire();
 	}
 	return false;
+}
+
+void AEnemyShip::ApplySpeedMultiplier(float Multiplier)
+{
+	RotationSpeed *= Multiplier;
 }

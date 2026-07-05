@@ -4,6 +4,8 @@
 #include "PaperSpriteComponent.h"
 #include "Damageable.h"
 
+// ==================== Lifecycle ====================
+
 AProjectile::AProjectile()
 {
 	PrimaryActorTick.bCanEverTick = true;
@@ -40,6 +42,8 @@ void AProjectile::Tick(float DeltaTime)
 	);
 }
 
+// ==================== Gameplay Functions ====================
+
 void AProjectile::OnOverlapBegin(
 	UPrimitiveComponent* OverlappedComp,
 	AActor* OtherActor,
@@ -54,7 +58,6 @@ void AProjectile::OnOverlapBegin(
 	if (!OtherActor->Implements<UDamageable>())
 		return;
 
-	
 	ETeamID OtherTeam = IDamageable::Execute_GetTeamID(OtherActor);
 	ETeamID MyTeam = ETeamID::Neutral;
 
@@ -66,11 +69,9 @@ void AProjectile::OnOverlapBegin(
 		}
 	}
 
-	
 	if (MyTeam == OtherTeam)
 		return;
 
 	Destroy();
 	IDamageable::Execute_TakeHit(OtherActor, Damage);
-	
 }

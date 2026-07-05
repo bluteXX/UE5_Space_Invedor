@@ -6,6 +6,8 @@
 #include "Components/WidgetComponent.h"
 #include "Components/BoxComponent.h"
 
+// ==================== Lifecycle ====================
+
 APlanet::APlanet()
 {
 	PrimaryActorTick.bCanEverTick = false;
@@ -20,6 +22,7 @@ APlanet::APlanet()
 
 	HealthComponent = CreateDefaultSubobject<UHealthComponent>(TEXT("HealthComponent"));
 }
+
 void APlanet::BeginPlay()
 {
 	Super::BeginPlay();
@@ -29,6 +32,8 @@ void APlanet::BeginPlay()
 		HealthComponent->OnDeath.AddDynamic(this, &APlanet::HandlePlanetDeath);
 	}
 }
+
+// ==================== Gameplay Functions (IDamageable) ====================
 
 void APlanet::TakeHit_Implementation(float Damage)
 {
@@ -40,8 +45,10 @@ void APlanet::TakeHit_Implementation(float Damage)
 
 ETeamID APlanet::GetTeamID_Implementation() const
 {
-	return ETeamID::Player; 
+	return ETeamID::Player;
 }
+
+// ==================== Event Handlers ====================
 
 void APlanet::HandlePlanetDeath()
 {

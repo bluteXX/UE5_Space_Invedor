@@ -2,6 +2,8 @@
 #include "Projectile.h"
 #include "GameFramework/Actor.h"
 
+// ==================== Lifecycle ====================
+
 UWeaponComponent::UWeaponComponent()
 {
 	PrimaryComponentTick.bCanEverTick = true;
@@ -10,7 +12,7 @@ UWeaponComponent::UWeaponComponent()
 void UWeaponComponent::BeginPlay()
 {
 	Super::BeginPlay();
-	TimeSinceLastShot = FireCooldown; 
+	TimeSinceLastShot = FireCooldown;
 }
 
 void UWeaponComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
@@ -18,6 +20,8 @@ void UWeaponComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 	TimeSinceLastShot += DeltaTime;
 }
+
+// ==================== Gameplay Functions ====================
 
 bool UWeaponComponent::TryFire()
 {
@@ -33,15 +37,11 @@ bool UWeaponComponent::TryFire()
 	{
 		SpawnLocation = Muzzle->GetComponentLocation();
 
-		
 		FVector ForwardDir = Muzzle->GetForwardVector();
-
-		
 		SpawnRotation = ForwardDir.Rotation();
 	}
 	else
 	{
-		
 		SpawnLocation = Owner->GetActorLocation() + Owner->GetActorForwardVector() * 60.0f;
 		SpawnRotation = Owner->GetActorRotation();
 	}

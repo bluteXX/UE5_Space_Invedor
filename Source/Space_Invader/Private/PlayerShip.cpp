@@ -3,47 +3,44 @@
 #include "PaperSpriteComponent.h"
 #include "OrbitalMovementComponent.h"
 #include "HealthComponent.h"
-#include "WeaponComponent.h" 
+#include "WeaponComponent.h"
 #include "Components/ArrowComponent.h"
 #include "SpaceInvaderNormal.h"
 #include "Kismet/GameplayStatics.h"
+
+// ==================== Lifecycle ====================
+
 APlayerShip::APlayerShip()
 {
-	PrimaryActorTick.bCanEverTick = false; 
+	PrimaryActorTick.bCanEverTick = false;
 
-	
 	CollisionBox = CreateDefaultSubobject<UBoxComponent>(TEXT("CollisionBox"));
 	RootComponent = CollisionBox;
 	CollisionBox->SetCollisionProfileName(TEXT("OverlapAllDynamic"));
 
-	
 	ShipSprite = CreateDefaultSubobject<UPaperSpriteComponent>(TEXT("ShipSprite"));
 	ShipSprite->SetupAttachment(RootComponent);
 
-	
 	OrbitalMovement = CreateDefaultSubobject<UOrbitalMovementComponent>(TEXT("OrbitalMovement"));
 
-	Weapon = CreateDefaultSubobject<UWeaponComponent>(TEXT("Weapon")); 
+	Weapon = CreateDefaultSubobject<UWeaponComponent>(TEXT("Weapon"));
 	Weapon->FireCooldown = 0.5f;
 	Weapon->bIsEnemyWeapon = false;
 
 	Muzzle = CreateDefaultSubobject<UArrowComponent>(TEXT("Muzzle"));
 	Muzzle->SetupAttachment(RootComponent);
-	Muzzle->SetRelativeLocation(FVector(60.0f, 0.0f, 0.0f)); 
-	Muzzle->SetRelativeRotation(FRotator::ZeroRotator);      
-	Muzzle->ArrowSize = 1.0f; 
-	
+	Muzzle->SetRelativeLocation(FVector(60.0f, 0.0f, 0.0f));
+	Muzzle->SetRelativeRotation(FRotator::ZeroRotator);
+	Muzzle->ArrowSize = 1.0f;
 
 	HealthComponent = CreateDefaultSubobject<UHealthComponent>(TEXT("HealthComponent"));
-	
-	
 }
 
 void APlayerShip::BeginPlay()
 {
 	Super::BeginPlay();
 	Weapon->SetMuzzle(Muzzle);
-	
+
 	if (OrbitalMovement)
 	{
 		OrbitalMovement->OrbitRadius = PLAYER_ORBIT_RADIUS;
@@ -55,25 +52,7 @@ void APlayerShip::BeginPlay()
 	}
 }
 
-
-void APlayerShip::MoveAlongOrbit(float Value)
-{
-	if (Value != 0.0f && OrbitalMovement != nullptr)
-	{
-		
-		float DeltaAngle = Value * AngularSpeed * GetWorld()->GetDeltaSeconds();
-
-		
-		OrbitalMovement->MoveOrbit(DeltaAngle);
-	}
-}
-void APlayerShip::Fire()
-{
-	if (Weapon)
-	{
-		Weapon->TryFire();
-	}
-}
+// ==================== Gameplay Functions (IDamageable) ====================
 
 ETeamID APlayerShip::GetTeamID_Implementation() const
 {
@@ -87,6 +66,27 @@ void APlayerShip::TakeHit_Implementation(float Damage)
 		HealthComponent->ApplyDamage(Damage);
 	}
 }
+
+// ==================== Input ====================
+
+void APlayerShip::MoveAlongOrbit(float Value)
+{
+	if (Value != 0.0f && OrbitalMovement != nullptr)
+	{
+		float DeltaAngle = Value * AngularSpeed * GetWorld()->GetDeltaSeconds();
+		OrbitalMovement->MoveOrbit(DeltaAngle);
+	}
+}
+
+void APlayerShip::Fire()
+{
+	if (Weapon)
+	{
+		Weapon->TryFire();
+	}
+}
+
+// ==================== Event Handlers ====================
 
 void APlayerShip::HandlePlayerDeath()
 {

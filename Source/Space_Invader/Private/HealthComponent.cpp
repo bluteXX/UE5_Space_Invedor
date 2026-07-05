@@ -1,5 +1,7 @@
 #include "HealthComponent.h"
 
+// ==================== Lifecycle ====================
+
 UHealthComponent::UHealthComponent()
 {
 	PrimaryComponentTick.bCanEverTick = false;
@@ -10,6 +12,8 @@ void UHealthComponent::BeginPlay()
 	Super::BeginPlay();
 	CurrentHealth = MaxHealth;
 }
+
+// ==================== Gameplay Functions ====================
 
 void UHealthComponent::ApplyDamage(float Damage)
 {

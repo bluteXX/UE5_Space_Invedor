@@ -7,6 +7,8 @@
 #include "SpaceInvaderNormal.h"
 #include "Kismet/GameplayStatics.h"
 
+// ==================== Lifecycle ====================
+
 ASpiralEnemy::ASpiralEnemy()
 {
 	PrimaryActorTick.bCanEverTick = true;
@@ -38,18 +40,6 @@ void ASpiralEnemy::BeginPlay()
 	GetWorldTimerManager().SetTimer(FireTimerHandle, this, &ASpiralEnemy::TryFireAtCenter, FireInterval, true);
 }
 
-void ASpiralEnemy::SetupSpiral(const FVector& SpawnLocation, float InTimeToReachCenter)
-{
-	CurrentRadius = FMath::Sqrt(SpawnLocation.X * SpawnLocation.X + SpawnLocation.Z * SpawnLocation.Z);
-	CurrentAngle = FMath::RadiansToDegrees(FMath::Atan2(SpawnLocation.Z, SpawnLocation.X));
-	CenterDepth = SpawnLocation.Y;
-
-	
-	InwardSpeed = (InTimeToReachCenter > 0.0f) ? (CurrentRadius / InTimeToReachCenter) : 0.0f;
-
-	SetActorLocation(SpawnLocation);
-}
-
 void ASpiralEnemy::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
@@ -66,19 +56,55 @@ void ASpiralEnemy::Tick(float DeltaTime)
 	FVector NewLocation(FMath::Cos(Rad) * CurrentRadius, CenterDepth, FMath::Sin(Rad) * CurrentRadius);
 	SetActorLocation(NewLocation);
 
-	
 	FVector DirectionToCenter = (FVector(0.0f, CenterDepth, 0.0f) - NewLocation).GetSafeNormal();
 	if (!DirectionToCenter.IsNearlyZero())
 	{
 		SetActorRotation(DirectionToCenter.Rotation());
 	}
 
-	
 	if (CurrentRadius <= DEFEAT_ORBIT_RADIUS)
 	{
 		OnBreachedPlayerOrbit();
 	}
 }
+
+void ASpiralEnemy::Destroyed()
+{
+	Super::Destroyed();
+	GetWorldTimerManager().ClearTimer(FireTimerHandle);
+
+	if (MyManager)
+	{
+		MyManager->RemoveSpiralEnemy(this);
+	}
+}
+
+// ==================== Gameplay Functions (IDamageable) ====================
+
+void ASpiralEnemy::TakeHit_Implementation(float Damage)
+{
+	Destroy();
+}
+
+ETeamID ASpiralEnemy::GetTeamID_Implementation() const
+{
+	return ETeamID::Enemy;
+}
+
+// ==================== Setup ====================
+
+void ASpiralEnemy::SetupSpiral(const FVector& SpawnLocation, float InTimeToReachCenter)
+{
+	CurrentRadius = FMath::Sqrt(SpawnLocation.X * SpawnLocation.X + SpawnLocation.Z * SpawnLocation.Z);
+	CurrentAngle = FMath::RadiansToDegrees(FMath::Atan2(SpawnLocation.Z, SpawnLocation.X));
+	CenterDepth = SpawnLocation.Y;
+
+	InwardSpeed = (InTimeToReachCenter > 0.0f) ? (CurrentRadius / InTimeToReachCenter) : 0.0f;
+
+	SetActorLocation(SpawnLocation);
+}
+
+// ==================== Internal Gameplay Logic ====================
 
 void ASpiralEnemy::TryFireAtCenter()
 {
@@ -100,25 +126,4 @@ void ASpiralEnemy::OnBreachedPlayerOrbit()
 	}
 
 	Destroy();
-}
-
-void ASpiralEnemy::Destroyed()
-{
-	Super::Destroyed();
-	GetWorldTimerManager().ClearTimer(FireTimerHandle);
-
-	if (MyManager)
-	{
-		MyManager->RemoveSpiralEnemy(this);
-	}
-}
-
-void ASpiralEnemy::TakeHit_Implementation(float Damage)
-{
-	Destroy();
-}
-
-ETeamID ASpiralEnemy::GetTeamID_Implementation() const
-{
-	return ETeamID::Enemy;
 }

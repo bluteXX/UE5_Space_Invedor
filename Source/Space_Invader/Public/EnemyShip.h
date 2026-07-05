@@ -23,11 +23,13 @@ public:
 
 	AEnemyShip();
 	virtual void OnConstruction(const FTransform& Transform) override;
+	
 	virtual void Destroyed() override;
 
 	// ==================== Gameplay Functions (IDamageable) ====================
-
+	
 	void TakeHit_Implementation(float Damage);
+
 	virtual ETeamID GetTeamID_Implementation() const override;
 
 	// ==================== Gameplay Functions ====================
