@@ -10,14 +10,24 @@ class SPACE_INVADER_API ASpaceInvaderEndless : public ASpaceInvaderNormal
 	GENERATED_BODY()
 
 public:
+
+	// ==================== Lifecycle ====================
+
 	virtual void BeginPlay() override;
 
-protected:
-	virtual void HandleAllEnemiesDefeated() override;
-
-	UPROPERTY()
-	class AAsteroidManager* AsteroidManagerRef = nullptr;
+	// ==================== Runtime State ====================
 
 	UPROPERTY(BlueprintReadOnly, Category = "Endless")
 	int32 CurrentWave = 1;
+
+protected:
+
+	// ==================== Event Handlers ====================
+
+	virtual void HandleAllEnemiesDefeated() override;
+
+	// ==================== References ====================
+
+	UPROPERTY()
+	class AAsteroidManager* AsteroidManagerRef = nullptr;
 };

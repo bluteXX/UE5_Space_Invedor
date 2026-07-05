@@ -11,45 +11,40 @@ class ASpiralEnemy;
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnAllEnemiesDefeated);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnEnemyBreachedOrbit);
 
-
 UCLASS()
-
-
 class SPACE_INVADER_API AEnemyManager : public AActor
 {
 	GENERATED_BODY()
 
-
-
-protected:
-
-	virtual void BeginPlay() override;
-
-
 public:
+
+	// ==================== Lifecycle ====================
+
+	AEnemyManager();
+
+	// ==================== Delegates / Events ====================
 
 	UPROPERTY(BlueprintAssignable, Category = "Events")
 	FOnAllEnemiesDefeated OnAllEnemiesDefeated;
+
 	UPROPERTY(BlueprintAssignable)
 	FOnEnemyBreachedOrbit OnEnemyBreachedOrbit;
-	
 
-	AEnemyManager();
+	// ==================== Gameplay Functions ====================
 
 	void SpawnWave();
 	void SpawnSpiralEnemy();
 
-	
 	void RemoveEnemy(AEnemyShip* Enemy);
 	void RemoveSpiralEnemy(ASpiralEnemy* Enemy);
 
 	AEnemyShip* GetRandomEnemyInOrbit(int32 OrbitIndex);
-
-	
 	void EnemyShootFromLowestOrbit();
 
 	UFUNCTION(BlueprintCallable, Category = "Difficulty")
 	void IncreaseDifficulty();
+
+	// ==================== Difficulty Configuration ====================
 
 	UPROPERTY(EditAnywhere, Category = "Difficulty")
 	float SpeedMultiplierPerWave = 1.15f;
@@ -57,28 +52,17 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Difficulty")
 	int32 ExtraEnemiesPerWave = 1;
 
-
-	
 	UPROPERTY(EditDefaultsOnly, Category = "Difficulty")
 	float FireIntervalReductionPerWave = 0.05f;
 
-	
 	UPROPERTY(EditDefaultsOnly, Category = "Difficulty")
 	float MinFireIntervalFloor = 0.2f;
 
 protected:
 
+	virtual void BeginPlay() override;
 
-	float CurrentSpeedMultiplier = 1.0f;
-
-	UPROPERTY(EditAnywhere, Category = "Spawn")
-	TSubclassOf<ASpiralEnemy> SpiralEnemyClass;
-
-	UPROPERTY(EditAnywhere, Category = "Spawn")
-	float SpiralEnemyTimeToCenter = 180.0f;
-
-	UPROPERTY(EditAnywhere, Category = "Spawn")
-	int32 NumberOfSpiralEnemies = 1;
+	// ==================== Spawn Configuration — Orbit Enemies ====================
 
 	UPROPERTY(EditAnywhere, Category = "Spawn")
 	TSubclassOf<AEnemyShip> EnemyClassToSpawn;
@@ -95,10 +79,18 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Spawn")
 	float RadiusStep = 100.f;
 
+	// ==================== Spawn Configuration — Spiral Enemies ====================
 
+	UPROPERTY(EditAnywhere, Category = "Spawn")
+	TSubclassOf<ASpiralEnemy> SpiralEnemyClass;
 
-	// Shooting Settings
+	UPROPERTY(EditAnywhere, Category = "Spawn")
+	float SpiralEnemyTimeToCenter = 180.0f;
 
+	UPROPERTY(EditAnywhere, Category = "Spawn")
+	int32 NumberOfSpiralEnemies = 1;
+
+	// ==================== Shooting Configuration ====================
 
 	UPROPERTY(EditAnywhere, Category = "Shooting")
 	float MinFireInterval = 0.4f;
@@ -112,20 +104,19 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Shooting")
 	float ChanceForExtraShot = 0.2f;
 
+	// ==================== Runtime State ====================
+
+	float CurrentSpeedMultiplier = 1.0f;
 
 private:
 
-
-	// Internal Functions
-
+	// ==================== Internal Functions ====================
 
 	void ScheduleNextShot();
 	void CheckForWin();
 	int32 GetLowestActiveOrbitIndex() const;
 
-
-	// Runtime Data
-
+	// ==================== Runtime Data ====================
 
 	// Enemies grouped by orbit ring.
 	TArray<TArray<AEnemyShip*>> EnemyOrbits;

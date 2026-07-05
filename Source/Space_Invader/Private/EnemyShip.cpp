@@ -80,14 +80,17 @@ void AEnemyShip::SetupOrbit(float NewRadius, float NewAngle)
 void AEnemyShip::DescendOrbit(float RadiusStep)
 {
 	OrbitRadius -= RadiusStep;
-
 	RotationSpeed *= 1.2f;
+
 	if (OrbitRadius <= DEFEAT_ORBIT_RADIUS)
 	{
 		if (MyManager)
 		{
 			MyManager->OnEnemyBreachedOrbit.Broadcast();
 		}
+
+		Destroy();   
+		return;      
 	}
 
 	if (OrbitalMovement)

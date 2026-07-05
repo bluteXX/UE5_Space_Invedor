@@ -10,20 +10,26 @@ class SPACE_INVADER_API UOrbitalMovementComponent : public UActorComponent
 	GENERATED_BODY()
 
 public:
+
+	// ==================== Lifecycle ====================
+
 	UOrbitalMovementComponent();
 
-	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Orbit")
-	float OrbitRadius = 300.0f;
+	// ==================== Gameplay Functions ====================
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Orbit")
-	float CurrentAngle = 270.0f;
-
-	
 	UFUNCTION(BlueprintCallable, Category = "Orbit")
 	void MoveOrbit(float DeltaAngle);
 
-	
 	UFUNCTION(BlueprintCallable, Category = "Orbit")
 	void UpdateOwnerPosition();
+
+	// ==================== Configuration ====================
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Orbit")
+	float OrbitRadius = 300.0f;
+
+	// ==================== Runtime State ====================
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Orbit")
+	float CurrentAngle = 270.0f;
 };

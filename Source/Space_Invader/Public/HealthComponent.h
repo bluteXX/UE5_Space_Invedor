@@ -13,13 +13,17 @@ class SPACE_INVADER_API UHealthComponent : public UActorComponent
 	GENERATED_BODY()
 
 public:
+
+	// ==================== Lifecycle ====================
+
 	UHealthComponent();
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health")
-	float MaxHealth = 100.0f;
+	// ==================== Gameplay Functions ====================
 
-	UPROPERTY(BlueprintReadOnly, Category = "Health")
-	float CurrentHealth = 100.0f;
+	UFUNCTION(BlueprintCallable)
+	void ApplyDamage(float Damage);
+
+	// ==================== Delegates / Events ====================
 
 	UPROPERTY(BlueprintAssignable)
 	FOnHealthChanged OnHealthChanged;
@@ -27,15 +31,21 @@ public:
 	UPROPERTY(BlueprintAssignable)
 	FOnDeath OnDeath;
 
-	UFUNCTION(BlueprintCallable)
-	void ApplyDamage(float Damage);
+	// ==================== Configuration ====================
 
-	UFUNCTION(BlueprintCallable)
-	bool IsDead() const { return CurrentHealth <= 0.0f; }
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health")
+	float MaxHealth = 100.0f;
+
+	// ==================== Runtime State ====================
+
+	UPROPERTY(BlueprintReadOnly, Category = "Health")
+	float CurrentHealth = 100.0f;
 
 protected:
+
 	virtual void BeginPlay() override;
 
 private:
+
 	bool bIsDead = false;
 };

@@ -19,7 +19,7 @@ void ASpaceInvaderEndless::HandleAllEnemiesDefeated()
 	}
 
 	CurrentWave++;
-	UE_LOG(LogTemp, Warning, TEXT("Endless: fala %d"), CurrentWave);
+	UE_LOG(LogTemp, Warning, TEXT("fala %d"), CurrentWave);
 
 	if (EnemyManagerRef)
 	{

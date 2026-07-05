@@ -1,10 +1,9 @@
 #pragma once
+
 #include "Damageable.h"
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
 #include "PlayerShip.generated.h"
-
-// Forward declarations
 
 class UBoxComponent;
 class UPaperSpriteComponent;
@@ -12,6 +11,7 @@ class UOrbitalMovementComponent;
 class UWeaponComponent;
 class UArrowComponent;
 class UHealthComponent;
+
 UCLASS()
 class SPACE_INVADER_API APlayerShip : public APawn, public IDamageable
 {
@@ -19,38 +19,33 @@ class SPACE_INVADER_API APlayerShip : public APawn, public IDamageable
 
 public:
 
-	
-	// Constructor & Lifecycle
-	
+	// ==================== Lifecycle ====================
 
 	APlayerShip();
-
-
 	virtual void BeginPlay() override;
+
+	// ==================== Gameplay Functions (IDamageable) ====================
+
+	ETeamID GetTeamID_Implementation() const;
+	void TakeHit_Implementation(float Damage);
+
+	// ==================== Event Handlers ====================
 
 	UFUNCTION()
 	void HandlePlayerDeath();
 
-	// Gameplay Functions
-
-	ETeamID GetTeamID_Implementation() const;
-
-	void TakeHit_Implementation(float Damage);
-
 protected:
 
-
-	// Input
+	// ==================== Input ====================
 
 	UFUNCTION(BlueprintCallable, Category = "Input")
 	void MoveAlongOrbit(float Value);
 
 	UFUNCTION(BlueprintCallable, Category = "Input")
 	void Fire();
-	
-	// Components
-	
-	
+
+	// ==================== Components ====================
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	UBoxComponent* CollisionBox;
 
@@ -68,13 +63,9 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	UHealthComponent* HealthComponent;
-	
-	// Configuration
-	
+
+	// ==================== Configuration ====================
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
 	float AngularSpeed = 180.0f;
-
-	
-
 };

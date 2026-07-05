@@ -14,23 +14,25 @@ class SPACE_INVADER_API AAsteroidManager : public AActor
 
 public:
 
+	// ==================== Lifecycle ====================
+
 	AAsteroidManager();
+
+	// ==================== Gameplay Functions ====================
+
 	UFUNCTION(BlueprintCallable, Category = "Difficulty")
 	void IncreaseDifficulty();
+
 protected:
 
 	virtual void BeginPlay() override;
 
+	// ==================== Internal Logic ====================
+
 	void SpawnAsteroid();
 	void ScheduleNextSpawn();
 
-	
-
-	UPROPERTY(EditAnywhere, Category = "Difficulty")
-	float SpawnIntervalReductionPerWave = 0.3f;
-
-	UPROPERTY(EditAnywhere, Category = "Difficulty")
-	float MinSpawnIntervalFloor = 0.5f;
+	// ==================== Spawn Configuration ====================
 
 	UPROPERTY(EditAnywhere, Category = "Spawn")
 	TSubclassOf<AAsteroid> AsteroidClass;
@@ -44,7 +46,17 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Spawn")
 	float AsteroidSpeed = 150.0f;
 
+	// ==================== Difficulty Configuration ====================
+
+	UPROPERTY(EditAnywhere, Category = "Difficulty")
+	float SpawnIntervalReductionPerWave = 0.3f;
+
+	UPROPERTY(EditAnywhere, Category = "Difficulty")
+	float MinSpawnIntervalFloor = 0.5f;
+
 private:
+
+	// ==================== Runtime State ====================
 
 	FTimerHandle SpawnTimerHandle;
 };

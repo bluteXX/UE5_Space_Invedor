@@ -11,17 +11,17 @@ class UDamageable : public UInterface
 	GENERATED_BODY()
 };
 
-// Interface class (no logic here)
 class IDamageable
 {
 	GENERATED_BODY()
 
 public:
 
-	// Called when object receives damage
+	// ==================== Gameplay Functions ====================
+
 	UFUNCTION(BlueprintNativeEvent)
 	void TakeHit(float Damage);
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	ETeamID GetTeamID() const;
 };

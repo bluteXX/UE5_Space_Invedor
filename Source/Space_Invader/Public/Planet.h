@@ -18,21 +18,25 @@ class SPACE_INVADER_API APlanet : public AActor, public IDamageable
 
 public:
 
+	// ==================== Lifecycle ====================
+
 	APlanet();
 
-	UFUNCTION()
-	void HandlePlanetDeath();
-
-	
+	// ==================== Gameplay Functions (IDamageable) ====================
 
 	void TakeHit_Implementation(float Damage);
 	ETeamID GetTeamID_Implementation() const;
+
+	// ==================== Event Handlers ====================
+
+	UFUNCTION()
+	void HandlePlanetDeath();
 
 protected:
 
 	virtual void BeginPlay() override;
 
-
+	// ==================== Components ====================
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	UBoxComponent* CollisionBox;

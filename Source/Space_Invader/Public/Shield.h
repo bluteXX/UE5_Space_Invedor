@@ -13,18 +13,26 @@ class SPACE_INVADER_API AShield : public AActor
 
 public:
 
+	// ==================== Lifecycle ====================
+
 	AShield();
 
 protected:
 
 	virtual void BeginPlay() override;
 
+	// ==================== Internal Logic ====================
+
 	void SpawnShield();
+
+	// ==================== Configuration ====================
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Shield")
 	TSubclassOf<AShieldBlock> BlockClass;
 
 private:
+
+	// ==================== Runtime State ====================
 
 	TArray<AShieldBlock*> Blocks;
 };

@@ -10,13 +10,12 @@ class SPACE_INVADER_API ASpaceInvaderGameState : public AGameStateBase
 	GENERATED_BODY()
 
 public:
+
+	// ==================== Lifecycle ====================
+
 	ASpaceInvaderGameState();
 
-	UPROPERTY(BlueprintReadOnly, Category = "Stats")
-	int32 EnemiesKilled = 0;
-
-	UPROPERTY(BlueprintReadOnly, Category = "Stats")
-	float GameTime = 0.0f;
+	// ==================== Gameplay Functions ====================
 
 	UFUNCTION(BlueprintCallable, Category = "Stats")
 	void AddKill();
@@ -24,10 +23,20 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Stats")
 	void StopTimer();
 
+	// ==================== Runtime State ====================
+
+	UPROPERTY(BlueprintReadOnly, Category = "Stats")
+	int32 EnemiesKilled = 0;
+
+	UPROPERTY(BlueprintReadOnly, Category = "Stats")
+	float GameTime = 0.0f;
+
 protected:
+
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
 
 private:
+
 	bool bTimerRunning = true;
 };

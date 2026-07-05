@@ -14,42 +14,11 @@ class SPACE_INVADER_API AProjectile : public AActor
 
 public:
 
-	
-	// Constructor & Lifecycle
-	
+	// ==================== Lifecycle ====================
 
 	AProjectile();
 
-
-protected:
-
-	virtual void BeginPlay() override;
-	virtual void Tick(float DeltaTime) override;
-
-
-public:
-
-	
-	// Projectile Settings
-	
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Projectile")
-	float Speed = 1200.0f;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Projectile")
-	float Damage = 10.0f;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Projectile")
-	float LifeSpan = 3.0f;
-
-	
-	UPROPERTY(BlueprintReadOnly, Category = "Projectile")
-	bool bIsEnemyProjectile = false;
-
-
-	
-	// Collision
-	
+	// ==================== Gameplay Functions ====================
 
 	UFUNCTION()
 	void OnOverlapBegin(
@@ -61,14 +30,32 @@ public:
 		const FHitResult& SweepResult
 	);
 
-
-	
-	// Components
-	
+	// ==================== Components ====================
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	UBoxComponent* CollisionBox;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	UPaperSpriteComponent* ProjectileSprite;
+
+	// ==================== Configuration ====================
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Projectile")
+	float Speed = 1200.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Projectile")
+	float Damage = 10.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Projectile")
+	float LifeSpan = 3.0f;
+
+	// ==================== Runtime State ====================
+
+	UPROPERTY(BlueprintReadOnly, Category = "Projectile")
+	bool bIsEnemyProjectile = false;
+
+protected:
+
+	virtual void BeginPlay() override;
+	virtual void Tick(float DeltaTime) override;
 };

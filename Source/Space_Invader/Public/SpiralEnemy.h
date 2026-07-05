@@ -20,21 +20,22 @@ class SPACE_INVADER_API ASpiralEnemy : public AActor, public IDamageable
 
 public:
 
-	// Constructor & Lifecycle
+	// ==================== Lifecycle ====================
 
 	ASpiralEnemy();
 
-
-	void SetupSpiral(const FVector& SpawnLocation, float InTimeToReachCenter);
-
-	// Manager
-
-	void SetManager(AEnemyManager* NewManager) { MyManager = NewManager; }
-
-	// Gameplay Functions (IDamageable)
+	// ==================== Gameplay Functions (IDamageable) ====================
 
 	void TakeHit_Implementation(float Damage);
 	ETeamID GetTeamID_Implementation() const;
+
+	// ==================== Setup ====================
+
+	void SetupSpiral(const FVector& SpawnLocation, float InTimeToReachCenter);
+
+	// ==================== Manager ====================
+
+	void SetManager(AEnemyManager* NewManager) { MyManager = NewManager; }
 
 protected:
 
@@ -42,13 +43,12 @@ protected:
 	virtual void Tick(float DeltaTime) override;
 	virtual void Destroyed() override;
 
+	// ==================== Internal Gameplay Logic ====================
 
 	void OnBreachedPlayerOrbit();
-
-
 	void TryFireAtCenter();
 
-	// Components
+	// ==================== Components ====================
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	UBoxComponent* CollisionBox;
@@ -62,28 +62,28 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	UWeaponComponent* Weapon;
 
-	// Configuration
-
+	// ==================== Configuration ====================
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spiral")
 	float RotationSpeed = 90.0f;
-
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
 	float FireInterval = 2.0f;
 
 private:
 
+	// ==================== References ====================
+
+	UPROPERTY()
+	AEnemyManager* MyManager;
+
+	// ==================== Runtime State ====================
+
 	float CurrentAngle = 0.0f;
 	float CurrentRadius = 0.0f;
 	float InwardSpeed = 0.0f;
 	float CenterDepth = 0.0f;
-
-
 	bool bHasBreachedOrbit = false;
-
-	UPROPERTY()
-	AEnemyManager* MyManager;
 
 	FTimerHandle FireTimerHandle;
 };
