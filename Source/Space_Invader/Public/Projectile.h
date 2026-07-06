@@ -1,6 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameTypes.h"
 #include "GameFramework/Actor.h"
 #include "Projectile.generated.h"
 
@@ -53,6 +54,9 @@ public:
 
 	UPROPERTY(BlueprintReadOnly, Category = "Projectile")
 	bool bIsEnemyProjectile = false;
+
+	UPROPERTY(BlueprintReadOnly, Category = "Projectile")
+	ETeamID OwnerTeam = ETeamID::Neutral;
 
 protected:
 

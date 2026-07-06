@@ -1,5 +1,6 @@
 #include "WeaponComponent.h"
 #include "Projectile.h"
+#include "Damageable.h"
 #include "GameFramework/Actor.h"
 
 // ==================== Lifecycle ====================
@@ -54,6 +55,12 @@ bool UWeaponComponent::TryFire()
 	if (NewProjectile)
 	{
 		NewProjectile->bIsEnemyProjectile = bIsEnemyWeapon;
+
+		if (Owner->Implements<UDamageable>())
+		{
+			NewProjectile->OwnerTeam = IDamageable::Execute_GetTeamID(Owner);
+		}
+
 		NewProjectile->FinishSpawning(SpawnTransform);
 	}
 

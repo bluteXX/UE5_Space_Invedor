@@ -59,17 +59,8 @@ void AProjectile::OnOverlapBegin(
 		return;
 
 	ETeamID OtherTeam = IDamageable::Execute_GetTeamID(OtherActor);
-	ETeamID MyTeam = ETeamID::Neutral;
 
-	if (AActor* OwnerActor = GetOwner())
-	{
-		if (OwnerActor->Implements<UDamageable>())
-		{
-			MyTeam = IDamageable::Execute_GetTeamID(OwnerActor);
-		}
-	}
-
-	if (MyTeam == OtherTeam)
+	if (OwnerTeam == OtherTeam)   
 		return;
 
 	Destroy();
